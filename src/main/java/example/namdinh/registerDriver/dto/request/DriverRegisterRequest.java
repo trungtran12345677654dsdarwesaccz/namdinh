@@ -14,8 +14,6 @@ public class DriverRegisterRequest {
     private String driverName;
     @NotNull @Min(18)
     private Integer age;
-    @NotBlank
-    private String licenseNumber;
     private String phoneNumber;
     private String face;
     private String licenseImageUrl;

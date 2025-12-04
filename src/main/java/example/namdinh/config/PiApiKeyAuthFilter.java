@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class PiApiKeyAuthFilter extends OncePerRequestFilter {
@@ -20,17 +22,26 @@ public class PiApiKeyAuthFilter extends OncePerRequestFilter {
     private String validApiKey;
 
     private static final String API_KEY_HEADER = "X-API-KEY";
-    private static final String PI_INIT_PATH = "/api/scanning/drivers/init";
+
+    // ĐỊNH NGHĨA CÁC ĐƯỜNG DẪN CẦN BẢO VỆ BẰNG API KEY
+    private static final List<String> PI_PROTECTED_PATHS = Arrays.asList(
+            "/api/scanning/drivers/**",
+            "/api/trips/**"
+    );
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        if (request.getRequestURI().equals(PI_INIT_PATH)) {
+
+        // Chỉ áp dụng xác thực API Key cho các đường dẫn được định nghĩa
+        if (PI_PROTECTED_PATHS.contains(request.getRequestURI())) {
             String requestApiKey = request.getHeader(API_KEY_HEADER);
+
             if (requestApiKey == null || !requestApiKey.equals(validApiKey)) {
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                response.getWriter().write("Invalid or missing API Key for IoT endpoint.");
+                response.setContentType("application/json");
+                response.getWriter().write("{\"error\": \"Invalid or missing API Key for IoT endpoint.\"}");
                 return;
             }
         }

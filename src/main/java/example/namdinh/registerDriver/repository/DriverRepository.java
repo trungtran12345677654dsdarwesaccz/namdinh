@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface DriverRepository extends JpaRepository<Driver, String> {
+public interface DriverRepository extends JpaRepository<Driver, Long> {
     boolean existsByface(String face);
     Optional<Driver> findByface(String face);
     // 1. Tìm kiếm theo Tên (không phân biệt chữ hoa/thường và chứa một phần)

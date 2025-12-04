@@ -36,7 +36,6 @@ public class ScanningDriverServiceImpl implements ScanningDriverService {
                 .isAccountCreated(false)
                 .driverName(null)
                 .age(1)
-                .licenseNumber(null)
                 .build();
 
         Driver savedDriver = driverRepository.save(driver);
@@ -55,7 +54,6 @@ public class ScanningDriverServiceImpl implements ScanningDriverService {
 
         driver.setDriverName(request.getDriverName());
         driver.setAge(request.getAge());
-        driver.setLicenseNumber(request.getLicenseNumber());
         driver.setPhoneNumber(request.getPhoneNumber());
         driver.setLicenseImageUrl(request.getLicenseImageUrl());
 

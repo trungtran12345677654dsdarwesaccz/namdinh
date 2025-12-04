@@ -50,10 +50,6 @@ public class UserServiceImpl implements UserService {
         if (request.getEmail() != null) {
             user.setEmail(request.getEmail());
         }
-
-        // LƯU Ý: Các trường như password, role, status, lastPasswordResetDate
-        // KHÔNG bị sửa đổi vì không có logic áp dụng thay đổi nào ở đây.
-        // 3. Lưu và trả về User đã cập nhật
         return userRepository.save(user);
     }
 }

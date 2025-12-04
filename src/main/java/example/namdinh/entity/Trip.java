@@ -64,6 +64,4 @@ public class Trip {
 
     @Column(name = "duration_seconds")
     private Integer durationSeconds; // Thời gian di chuyển (giây)
-
-
 }

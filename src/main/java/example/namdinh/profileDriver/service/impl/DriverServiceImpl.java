@@ -19,13 +19,13 @@ public class DriverServiceImpl implements DriverService {
     private final DriverRepository driverRepository;
 
     @Override
-    public Driver getDriverById(String driverId) {
+    public Driver getDriverById(Long driverId) {
         return driverRepository.findById(driverId)
                 .orElseThrow(() -> new RuntimeException("Driver not found with ID: " + driverId));
     }
 
     @Override
-    public Driver updateDriver(String driverId, DriverUpdateRequest request) {
+    public Driver updateDriver(Long driverId, DriverUpdateRequest request) {
         Driver driver = getDriverById(driverId);
 
         // Áp dụng các thay đổi từ DTO
@@ -34,9 +34,6 @@ public class DriverServiceImpl implements DriverService {
         }
         if (request.getAge() != null && request.getAge() > 0) {
             driver.setAge(request.getAge());
-        }
-        if (request.getLicenseNumber() != null) {
-            driver.setLicenseNumber(request.getLicenseNumber());
         }
         if (request.getPhoneNumber() != null) {
             driver.setPhoneNumber(request.getPhoneNumber());
@@ -54,7 +51,7 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public void deleteDriver(String driverId) {
+    public void deleteDriver(Long driverId) {
         if (!driverRepository.existsById(driverId)) {
             throw new RuntimeException("Driver not found with ID: " + driverId);
         }
@@ -68,7 +65,5 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public List<Driver> searchDrivers(String driverName, Integer age, String phoneNumber) {
         return driverRepository.searchDrivers(driverName, age, phoneNumber);
-
-
     }
 }

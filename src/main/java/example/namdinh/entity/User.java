@@ -55,8 +55,8 @@ public class User  implements UserDetails {
     private LocalDateTime lastPasswordResetDate;
 
     // 1. Mối quan hệ 1-n: Danh sách xe thuộc sở hữu
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
-    private java.util.Set<Vehicle> vehicles; // Danh sách xe thuộc sở hữu
+    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL)
+    private Vehicle vehicles; // Danh sách xe thuộc sở hữu
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

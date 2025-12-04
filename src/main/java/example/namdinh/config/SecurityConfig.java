@@ -100,6 +100,8 @@ import java.util.List;
                             .requestMatchers("/api/auth/change-password-request").hasAuthority("ROLE_OWNER_LENDER")
                             .requestMatchers("/api/drivers/admin/**").hasAuthority("ROLE_OWNER_LENDER")
                             .requestMatchers("/api/users/profile/**").hasAuthority("ROLE_OWNER_LENDER")
+                            .requestMatchers("/api/trips/**").permitAll()
+                            .requestMatchers("/api/vehicles/**").hasAuthority("ROLE_OWNER_LENDER")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

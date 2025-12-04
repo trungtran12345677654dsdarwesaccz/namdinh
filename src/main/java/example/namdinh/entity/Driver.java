@@ -24,8 +24,6 @@ public class Driver {
     @Column(name = "age", length = 100)
     private int age;
 
-    @Column(name = "license_number", length = 50)
-    private String licenseNumber;
 
     @Column(name = "is_account_created", nullable = false)
     private boolean isAccountCreated = false;

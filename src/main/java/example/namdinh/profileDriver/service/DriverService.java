@@ -7,13 +7,13 @@ import java.util.List;
 
 public interface DriverService {
     // Cập nhật thông tin Driver
-    Driver updateDriver(String driverId, DriverUpdateRequest request);
+    Driver updateDriver(Long driverId, DriverUpdateRequest request);
 
     // Xóa Driver
-    void deleteDriver(String driverId);
+    void deleteDriver(Long driverId);
 
     // Tìm kiếm Driver (Hữu ích cho Controller)
-    Driver getDriverById(String driverId);
+    Driver getDriverById(Long driverId);
     // 1. Liệt kê tất cả
     List<Driver> getAllDrivers();
 

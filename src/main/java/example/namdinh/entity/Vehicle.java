@@ -4,34 +4,27 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+@Entity
+@Table(name = "vehicles")
 @Getter
 @Setter
-@Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Table(name = "VEHICLES")
 public class Vehicle {
 
     @Id
-    @Column(name = "vehicle_id", length = 50)
-    private String vehicleId; // Mã định danh duy nhất của xe (Khóa Chính)
+    @Column(name = "vehicle_id", length = 50, nullable = false)
+    private String vehicleId; // Ví dụ: Biển kiểm soát + hậu tố
 
     @Column(name = "license_plate", length = 15, nullable = false, unique = true)
-    private String licensePlate; // Biển số xe
-
-    @Column(name = "vehicle_type", length = 50)
-    private String vehicleType; // Loại xe
+    private String licensePlate; // Biển số xe (Unique)
 
     @Column(name = "camera_id", length = 50, nullable = false, unique = true)
-    private String cameraId; // Mã ID của camera gắn trên xe
+    private String cameraId;
 
-    @Column(name = "installation_date")
-    private LocalDate installationDate; // Ngày lắp đặt thiết bị
 
-    // Mối quan hệ Many-to-One: Liên kết với Chủ sở hữu
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id") // Trường user_id trong bảng VEHICLES (Khóa ngoại)
-    private User owner; // Chủ sở hữu của chiếc xe này
-
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", unique = true) // Cột FK trong bảng vehicles
+    private User owner;
 }

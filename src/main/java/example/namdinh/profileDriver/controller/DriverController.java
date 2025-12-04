@@ -1,6 +1,5 @@
 package example.namdinh.profileDriver.controller;
 
-// src/main/java/example/namdinh/controller/DriverController.java
 
 
 import example.namdinh.entity.Driver;
@@ -24,7 +23,7 @@ public class DriverController {
     // Lấy thông tin Driver
     @GetMapping("/{driverId}")
     @PreAuthorize("hasAnyRole('OWNER_LENDER')")
-    public ResponseEntity<Driver> getDriver(@PathVariable String driverId) {
+    public ResponseEntity<Driver> getDriver(@PathVariable Long driverId) {
         Driver driver = driverService.getDriverById(driverId);
         return ResponseEntity.ok(driver);
     }
@@ -33,7 +32,7 @@ public class DriverController {
     @PatchMapping("/{driverId}")
     @PreAuthorize("hasRole('OWNER_LENDER')")
     public ResponseEntity<Driver> updateDriver(
-            @PathVariable String driverId,
+            @PathVariable Long driverId,
             @RequestBody DriverUpdateRequest request) {
 
         Driver updatedDriver = driverService.updateDriver(driverId, request);
@@ -43,7 +42,7 @@ public class DriverController {
     // Xóa Driver
     @DeleteMapping("/{driverId}")
     @PreAuthorize("hasRole('OWNER_LENDER')")
-    public ResponseEntity<Void> deleteDriver(@PathVariable String driverId) {
+    public ResponseEntity<Void> deleteDriver(@PathVariable Long driverId) {
         driverService.deleteDriver(driverId);
         return ResponseEntity.noContent().build();
     }

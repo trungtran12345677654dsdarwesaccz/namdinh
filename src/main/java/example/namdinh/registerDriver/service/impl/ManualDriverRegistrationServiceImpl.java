@@ -30,11 +30,10 @@ public class ManualDriverRegistrationServiceImpl implements ManualDriverRegistra
         Driver driver = Driver.builder()
                 .driverName(request.getDriverName())
                 .age(request.getAge())
-                .licenseNumber(request.getLicenseNumber())
                 .licenseImageUrl(request.getLicenseImageUrl())
                 .phoneNumber(request.getPhoneNumber())
                 .face(request.getFace())
-                .isAccountCreated(true) // Đăng ký thủ công -> tài khoản được tạo
+                .isAccountCreated(true)
                 .build();
 
         Driver savedDriver = driverRepository.save(driver);
