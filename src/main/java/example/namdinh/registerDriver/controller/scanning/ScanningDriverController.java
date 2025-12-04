@@ -17,7 +17,7 @@ public class ScanningDriverController {
 
     private final ScanningDriverService scanningService;
 
-    // 1. Endpoint Dành cho thiết bị IoT (có thể cần API Key bảo mật)
+    // 1. Endpoint Dành cho thiết bị IoT
     @PostMapping("/init")
     public ResponseEntity<String> initializeDriver(@RequestBody DriverInitRequest request) {
         String driverId = scanningService.initializeDriver(request);

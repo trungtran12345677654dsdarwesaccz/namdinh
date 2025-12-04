@@ -62,7 +62,7 @@ public class JwtUtil {
 
         // Tùy chọn ID theo role
         if (user.getRole() == UserRole.OWNER_LENDER) {
-            claims.put("managerId", user.getUserId());
+            claims.put("managerId", user.getId());
         }
 
         System.out.println("Generated token claims: " + claims);

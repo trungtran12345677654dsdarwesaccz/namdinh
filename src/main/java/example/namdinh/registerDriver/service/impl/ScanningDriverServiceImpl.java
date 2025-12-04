@@ -22,43 +22,50 @@ public class ScanningDriverServiceImpl implements ScanningDriverService {
 
     @Override
     public String initializeDriver(DriverInitRequest request) {
-        if (driverRepository.existsByface(request.getFace())) {
-            // Có thể trả về ID Driver đã tồn tại nếu muốn cho phép cập nhật
+//        if (driverRepository.existsByface(request.getFace())) {
+//            throw new RuntimeException("Face model already registered.");
+//        }
+        if (request.isAccountCreated() == true) {
             throw new RuntimeException("Face model already registered.");
         }
-
+        if (driverRepository.existsByface(request.getFace())) {
+                throw new RuntimeException("This face link already exists.");
+             }
         Driver driver = Driver.builder()
-                .driverId(UUID.randomUUID().toString()) // ID tạm thời
                 .face(request.getFace())
-                .isAccountCreated(false) // Trạng thái: Chờ hoàn tất
-                .driverName("PENDING")
-                .age(0)
-                .licenseNumber("PENDING")
+                .isAccountCreated(false)
+                .driverName(null)
+                .age(1)
+                .licenseNumber(null)
                 .build();
 
-        driverRepository.save(driver);
-        return driver.getDriverId();
+        Driver savedDriver = driverRepository.save(driver);
+
+        return String.valueOf(savedDriver.getDriverId());
     }
 
     @Override
     public DriverResponse completeRegistration(DriverCompletionRequest request) {
-        Driver driver = driverRepository.findByface(request.getFace())
-                .orElseThrow(() -> new RuntimeException("Driver initialization record not found."));
 
-        if (driver.isAccountCreated()) {
-            throw new RuntimeException("Driver profile already completed.");
-        }
+        Driver driver = driverRepository
+                .findByFaceAndIsAccountCreated(request.getFace(), false)
+                .orElseThrow(() -> new RuntimeException("Driver initialization record not found or profile already completed."));
 
-        // Cập nhật các trường còn thiếu
-        driver.setDriverId(request.getDriverId());
+        // NOTE: Tại đây, driver.getFace() là giá trị Face Model ID/link ảnh đã được lưu trong DB.
+
         driver.setDriverName(request.getDriverName());
         driver.setAge(request.getAge());
         driver.setLicenseNumber(request.getLicenseNumber());
+        driver.setPhoneNumber(request.getPhoneNumber());
         driver.setLicenseImageUrl(request.getLicenseImageUrl());
-        driver.setAccountCreated(true); // Đã hoàn tất đăng ký/liên kết tài khoản
+
+        // 3. Đánh dấu trạng thái hoàn tất
+        driver.setAccountCreated(true); // Chuyển trạng thái sang TRUE
 
         Driver savedDriver = driverRepository.save(driver);
 
+        // 4. Trả về Response
+        // (savedDriver.getFace() sẽ trả về giá trị ban đầu được lưu trong DB)
         return DriverResponse.builder()
                 .driverId(savedDriver.getDriverId())
                 .driverName(savedDriver.getDriverName())
@@ -66,4 +73,5 @@ public class ScanningDriverServiceImpl implements ScanningDriverService {
                 .message("Driver profile registration completed successfully.")
                 .build();
     }
+
 }

@@ -14,13 +14,14 @@ import lombok.*;
 public class Driver {
 
     @Id
-    @Column(name = "driver_id", length = 50)
-    private String driverId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "driver_id")
+    private Long driverId;
 
-    @Column(name = "driver_name", length = 100, nullable = false)
+    @Column(name = "driver_name", length = 100)
     private String driverName;
 
-    @Column(name = "age", length = 100, nullable = false)
+    @Column(name = "age", length = 100)
     private int age;
 
     @Column(name = "license_number", length = 50)

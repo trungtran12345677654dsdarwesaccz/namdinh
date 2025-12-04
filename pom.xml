@@ -125,11 +125,19 @@
         <dependency>
             <groupId>com.google.http-client</groupId>
             <artifactId>google-http-client-jackson2</artifactId>
-            <version>1.42.3</version> <!-- hoặc 1.43.x nếu có -->
+            <version>1.42.3</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-aiplatform</artifactId>
+        </dependency>
 
-
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-aiplatform</artifactId>
+            <version>3.33.0</version>
+        </dependency>
 
         <!-- JWT -->
         <dependency>
@@ -204,6 +212,7 @@
 
 
     </dependencies>
+
 
     <build>
         <plugins>

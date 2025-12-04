@@ -25,7 +25,7 @@ public class User  implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long userId; // ID duy nhất của người dùng/chủ xe (Khóa Chính, Tự tăng)
+    private Long id; // ID duy nhất của người dùng/chủ xe (Khóa Chính, Tự tăng)
 
     @Column(name = "username", length = 50, nullable = false, unique = true)
     private String username; // Tên đăng nhập (Duy nhất)
@@ -60,7 +60,6 @@ public class User  implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + this.role.name()));
     }
 

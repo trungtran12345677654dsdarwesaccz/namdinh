@@ -8,4 +8,5 @@ import jakarta.validation.constraints.NotBlank;
 public class DriverInitRequest {
     @NotBlank
     private String face;
+    private boolean isAccountCreated  ;
 }

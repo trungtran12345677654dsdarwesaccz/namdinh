@@ -11,6 +11,7 @@ import example.namdinh.entity.User;
 import example.namdinh.entity.UserSession;
 import example.namdinh.enumeration.UserRole;
 import example.namdinh.enumeration.UserStatus;
+import example.namdinh.repository.OTPVerificationRepository;
 import example.namdinh.repository.RoleRepository;
 import example.namdinh.repository.UserRepository;
 import example.namdinh.repository.UserSessionRepository;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,10 +41,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final SecurityConfig securityConfig;
     private final RoleRepository roleRepository;
+    private final OTPVerificationRepository otpRepository;
     private final EmailService emailService;
     private final JwtUtil jwtUtil;
     private final UserSessionRepository userSessionRepository;
 
+    private String generateOtpCode() {
+        Random random = new Random();
+        int otp = 100000 + random.nextInt(900000); // Tạo số từ 100000 đến 999999
+        return String.valueOf(otp);
+    }
 
     @Override
     public List<UserSessionResponse> getActiveSessions(HttpServletRequest request) {
@@ -111,6 +119,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setPassword(securityConfig.passwordEncoder().encode(register.getPassword()));
         user.setPhone(register.getPhone());
         user.setFullName(register.getFullName());
+        user.setStatus(UserStatus.ACTIVE);
         user.setRole(UserRole.OWNER_LENDER);
         userRepository.save(user);
 
@@ -127,6 +136,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         response.setUserName(user.getUsername());
         response.setEmail(user.getEmail());
         response.setFullName(user.getFullName());
+        response.setStatus(UserStatus.ACTIVE);
         return response;
     }
 

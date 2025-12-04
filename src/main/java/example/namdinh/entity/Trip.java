@@ -26,7 +26,7 @@ public class Trip {
     private Vehicle vehicle; // Xe thực hiện chuyến đi
 
     @Column(name = "checkin_timestamp", nullable = false)
-    private LocalDateTime checkinTimestamp; // Thời điểm chính xác lên xe
+    private LocalDateTime checkinTimestamp; //Thời điểm chính xác người lái lên xe và bắt đầu chuyến đi (do Pi/thiết bị gửi về).
 
     @Column(name = "checkin_lat", precision = 10, scale = 8, nullable = false)
     private BigDecimal checkinLat; // Vĩ độ lúc lên xe
@@ -35,7 +35,7 @@ public class Trip {
     private BigDecimal checkinLong; // Kinh độ lúc lên xe
 
     @Column(name = "checkout_timestamp")
-    private LocalDateTime checkoutTimestamp;
+    private LocalDateTime checkoutTimestamp; //Thời điểm người lái xuống xe và kết thúc chuyến đi.
 
     @Column(name = "checkout_lat", precision = 10, scale = 8)
     private BigDecimal checkoutLat;

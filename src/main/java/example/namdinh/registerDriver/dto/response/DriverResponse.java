@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 public class DriverResponse {
-    private String driverId;
+    private Long driverId;
     private String driverName;
     private String licenseNumber;
     private boolean isAccountCreated;

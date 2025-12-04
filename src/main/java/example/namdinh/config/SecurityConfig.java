@@ -19,7 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
+import org.springframework.beans.factory.annotation.Value;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,6 +31,7 @@ import java.util.List;
     public class SecurityConfig { // Hoặc tên lớp cấu hình bảo mật của bạn
         private final JwtRequestFilter jwtAuthenticationFilter;
         private final UserDetailsService userDetailsService;
+        private final PiApiKeyAuthFilter piApiKeyAuthFilter;
         // private final PasswordEncoder passwordEncoder; // Không cần tiêm PasswordEncoder vào đây nữa, vì nó sẽ được tạo trong cùng lớp
         // Constructor đã được @AllArgsConstructor tạo ra sẽ không cần PasswordEncoder nữa
         // nếu bạn định nghĩa nó là một @Bean trong cùng lớp này.
@@ -62,7 +63,7 @@ import java.util.List;
         private static final String[] PUBLIC_ENDPOINTS = {
                 "/api/auth/register", "/api/auth/login", "/api/auth/me", "/api/auth/sendOTP", "/api/auth/verifyOTP", "/auth/verify-email-code",
                 "/api/user/forget-password", "/api/user/reset-password",
-                "/api/user", "/api/user/{id}", "/api/auth/login/verify-otp", "/api/auth/sendOTP", "/api/scanning/drivers/**"
+                "/api/user", "/api/user/{id}", "/api/auth/login/verify-otp", "/api/auth/sendOTP"
         };
 
     private static final String[] GET_PUBLIC_ENDPOINTS = {
@@ -93,17 +94,16 @@ import java.util.List;
                                     "/api/onboarding/**",
                                     "/api/auth/reset-password",
                                     "/api/auth/login/verify-otp").permitAll()
-                            .requestMatchers(HttpMethod.POST, "/api/onboarding/storage-unit-via-email").permitAll()
-                            .requestMatchers("/api/payment/confirm-payment").permitAll()
+                            .requestMatchers("/api/scanning/drivers/**").permitAll()
                             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                            .requestMatchers("/api/payment/generate-vietqr/{bookingId}").hasAnyRole("CUSTOMER")
-                            .requestMatchers("/api/v1/manager/**").hasAuthority("ROLE_MANAGER")
-                            .requestMatchers("/api/promotions/**").hasRole("MANAGER")
-                            .requestMatchers("/api/usage").hasAnyRole("MANAGER", "STAFF")
+                            .requestMatchers("/api/manual/drivers/**").hasRole("OWNER_LENDER")
+                            .requestMatchers("/api/auth/change-password-request").hasAuthority("ROLE_OWNER_LENDER")
+                            .requestMatchers("/api/drivers/admin/**").hasAuthority("ROLE_OWNER_LENDER")
+                            .requestMatchers("/api/users/profile/**").hasAuthority("ROLE_OWNER_LENDER")
                         .anyRequest().authenticated()
                 )
-
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(piApiKeyAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

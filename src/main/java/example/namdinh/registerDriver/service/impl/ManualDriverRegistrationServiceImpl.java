@@ -22,16 +22,18 @@ public class ManualDriverRegistrationServiceImpl implements ManualDriverRegistra
 
     @Override
     public DriverResponse registerNewDriver(DriverRegisterRequest request) {
-        // 1. Kiểm tra driverId và licenseNumber đã tồn tại chưa (logic kiểm tra bổ sung)
-        // 2. Tạo Driver Entity
+
+        if (driverRepository.existsByface(request.getFace())) {
+            throw new RuntimeException("Face link/ID already exists. Cannot register a new driver with this face.");
+        }
+
         Driver driver = Driver.builder()
-                .driverId(request.getDriverId())
                 .driverName(request.getDriverName())
                 .age(request.getAge())
                 .licenseNumber(request.getLicenseNumber())
                 .licenseImageUrl(request.getLicenseImageUrl())
                 .phoneNumber(request.getPhoneNumber())
-                .face(request.getFace() != null ? request.getFace() : UUID.randomUUID().toString()) // Gán tạm nếu không có
+                .face(request.getFace())
                 .isAccountCreated(true) // Đăng ký thủ công -> tài khoản được tạo
                 .build();
 

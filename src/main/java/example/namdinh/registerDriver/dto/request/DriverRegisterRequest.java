@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Min;
 @Data
 public class DriverRegisterRequest {
     @NotBlank
-    private String driverId;
+    private Long driverId;
     @NotBlank
     private String driverName;
     @NotNull @Min(18)

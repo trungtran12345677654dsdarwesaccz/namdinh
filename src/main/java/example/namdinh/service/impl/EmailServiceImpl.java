@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -45,27 +46,49 @@ public class EmailServiceImpl implements EmailService {
     private final JwtUtil jwtUtil;
     private final EmailAsyncSender emailAsyncSender;
     private final UserSessionRepository userSessionRepository;
+
+    private String generateOtpCode() {
+        Random random = new Random();
+        int otp = 100000 + random.nextInt(900000); // Tạo số từ 100000 đến 999999
+        return String.valueOf(otp);
+    }
+
     @Override
     @Transactional
     public void sendOTP(String recipient) {
         String cleanRecipient = recipient.trim();
 
+        // 1. Tìm User: Vẫn giữ nguyên
         User user = userRepository.findByEmail(cleanRecipient)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found for OTP generation: " + cleanRecipient));
 
-        otpVerificationRepository.findByEmail(cleanRecipient)
-                .ifPresent(otpVerificationRepository::delete);
+        // 2. TÌM KIẾM bản ghi OTP cũ dựa trên User Entity (để thỏa mãn UNIQUE constraint trên user_id)
+        Optional<Otp> existingOtpOpt = otpVerificationRepository.findByUser(user);
 
         String otpCode = generateOTPEmail();
         System.out.println("DEBUG: sendOTP - Generated OTP code: " + otpCode + " for " + cleanRecipient);
 
-        Otp verification = new Otp();
+        Otp verification;
+
+        if (existingOtpOpt.isPresent()) {
+            // TRƯỜNG HỢP 1: CẬP NHẬT bản ghi CŨ để tránh lỗi UNIQUE KEY
+            verification = existingOtpOpt.get();
+            // Không cần setCreatedDate
+        } else {
+            // TRƯỜNG HỢP 2: Tạo bản ghi MỚI
+            verification = new Otp();
+            verification.setCreatedDate(LocalDateTime.now()); // Chỉ set cho bản ghi mới
+            verification.setUser(user);
+        }
+
+        // 3. Cập nhật các trường chung (sẽ ghi đè lên bản ghi cũ hoặc điền vào bản ghi mới)
         verification.setEmail(cleanRecipient);
         verification.setOtp(otpCode);
-        verification.setCreatedDate(LocalDateTime.now());
         verification.setExpiredTime(LocalDateTime.now().plusMinutes(5));
         verification.setStatus(OtpStatus.PENDING);
-        verification.setUser(user);
+        // verification.setUser(user) đã được set ở trên/khi tạo mới
+
+        // 4. Lưu/Cập nhật: save() sẽ tự động quyết định là INSERT hay UPDATE dựa trên ID
         otpVerificationRepository.save(verification);
 
         emailAsyncSender.sendOTPAsync(cleanRecipient, otpCode);
@@ -131,7 +154,7 @@ public class EmailServiceImpl implements EmailService {
                     assignedRole = potentialRole;
                 } else {
                     System.err.println("Attempted login with disallowed role: '" + potentialRole + "' for user " + user.getUsername());
-                    throw new InsufficientAuthenticationException("Access denied: Only MANAGER and STAFF roles are allowed.");
+                    throw new InsufficientAuthenticationException("Access denied: Only OWNER roles are allowed.");
                 }
             } catch (IllegalArgumentException e) {
                 System.err.println("Invalid role string found from user authorities: " + roleStringFromAuthority + ". For user: " + user.getUsername());
