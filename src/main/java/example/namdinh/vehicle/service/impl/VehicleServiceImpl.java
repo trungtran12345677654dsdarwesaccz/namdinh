@@ -25,6 +25,11 @@ public class VehicleServiceImpl implements VehicleService {
         if (currentUser.getVehicles() != null) {
             throw new IllegalStateException("User ID " + currentUser.getId() + " đã sở hữu một Vehicle.");
         }
+        if (currentUser == null) {
+            throw new IllegalStateException("Current user entity is null. Cannot proceed with vehicle creation.");
+        }
+        // END: THÊM KIỂM TRA BẢO VỆ
+
 
         // 2. Kiểm tra ràng buộc duy nhất (Biển số & Camera ID)
         if (vehicleRepository.findByLicensePlate(request.getLicensePlate()).isPresent()) {
@@ -54,6 +59,24 @@ public class VehicleServiceImpl implements VehicleService {
                 .licensePlate(newVehicle.getLicensePlate())
                 .ownerId(currentUser.getId())
                 .message("Vehicle created and linked to user successfully.")
+                .build();
+    }
+    @Override
+    public VehicleResponse listVehicles(User currentUser) {
+        Vehicle vehicle = currentUser.getVehicles();
+
+        if (vehicle == null) {
+            return VehicleResponse.builder()
+                    .ownerId(currentUser.getId())
+                    .message("User hiện tại chưa sở hữu phương tiện nào.")
+                    .build();
+        }
+
+        return VehicleResponse.builder()
+                .vehicleId(vehicle.getVehicleId())
+                .licensePlate(vehicle.getLicensePlate())
+                .ownerId(currentUser.getId())
+                .message("Thông tin phương tiện hiện tại.")
                 .build();
     }
 }

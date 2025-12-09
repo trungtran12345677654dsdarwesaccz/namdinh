@@ -147,7 +147,6 @@ public class AuthenticationController {
         }
     }
     @PostMapping("/change-password-request")
-    @PreAuthorize("hasRole('OWNER_LENDER')")
     public ResponseEntity<String> requestChangePassword(HttpServletRequest request) {
         try {
             String token = jwtUtil.extractTokenFromRequest(request);

@@ -17,7 +17,7 @@ public class ManualDriverController {
 
     private final ManualDriverRegistrationService registrationService;
 
-    // Chỉ Manager/Admin mới có quyền đăng ký thủ công
+
     @PostMapping("/register")
     @PreAuthorize("hasRole('OWNER_LENDER')")
     public ResponseEntity<DriverResponse> register(@RequestBody DriverRegisterRequest request) {

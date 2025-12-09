@@ -16,7 +16,7 @@ public class UserController {
     private final UserService userService;
 
     @PatchMapping("/{userId}")
-    @PreAuthorize("hasAuthority('OWNER_LENDER') or authentication.principal.userId == #userId")
+    @PreAuthorize("hasRole('OWNER_LENDER')")
     public ResponseEntity<User> updateProfile(
             @PathVariable Long userId,
             @RequestBody UserUpdateRequest request) {
@@ -25,7 +25,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    @PreAuthorize("hasAuthority('OWNER_LENDER') or authentication.principal.userId == #userId")
+    @PreAuthorize("hasRole('OWNER_LENDER')")
     public ResponseEntity<User> getUserProfile(@PathVariable Long userId) {
         User user = userService.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));

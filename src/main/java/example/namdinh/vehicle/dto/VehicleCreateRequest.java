@@ -7,5 +7,4 @@ import lombok.Data;
 public class VehicleCreateRequest {
     private String licensePlate;
     private String cameraId;
-    private String vehicleType;
 }

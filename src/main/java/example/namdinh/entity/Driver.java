@@ -24,17 +24,16 @@ public class Driver {
     @Column(name = "age", length = 100)
     private int age;
 
-
     @Column(name = "is_account_created", nullable = false)
     private boolean isAccountCreated = false;
 
     @Column(name = "phone_number", length = 15)
     private String phoneNumber;
 
-    @Column(name = "face_model_id", length = 255)
+    @Column(name = "face_model_id", length = 500000)
     private String face;
 
-    @Column(name = "license_image_url", length = 255)
+    @Column(name = "license_image_url", length = 500000)
     private String licenseImageUrl;
 
 }

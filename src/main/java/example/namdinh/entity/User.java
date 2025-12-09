@@ -1,6 +1,8 @@
 package example.namdinh.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import example.namdinh.enumeration.UserRole;
 import example.namdinh.enumeration.UserStatus;
 import jakarta.persistence.*;
@@ -20,6 +22,7 @@ import java.util.Collections;
 @Builder
 @Getter
 @Setter
+@JsonIgnoreProperties("owner")
 public class User  implements UserDetails {
 
     @Id
@@ -55,6 +58,7 @@ public class User  implements UserDetails {
     private LocalDateTime lastPasswordResetDate;
 
     // 1. Mối quan hệ 1-n: Danh sách xe thuộc sở hữu
+    @JsonManagedReference
     @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL)
     private Vehicle vehicles; // Danh sách xe thuộc sở hữu
 

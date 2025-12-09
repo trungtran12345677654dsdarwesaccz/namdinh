@@ -19,12 +19,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.beans.factory.annotation.Value;
 import java.util.Arrays;
 import java.util.List;
-
-
-    @Configuration // Đánh dấu đây là lớp cấu hình của Spring
+    @Configuration
     @RequiredArgsConstructor
     @EnableGlobalMethodSecurity(prePostEnabled = true)
     @EnableMethodSecurity(prePostEnabled = true)
@@ -36,13 +33,7 @@ import java.util.List;
         // Constructor đã được @AllArgsConstructor tạo ra sẽ không cần PasswordEncoder nữa
         // nếu bạn định nghĩa nó là một @Bean trong cùng lớp này.
 
-    /**
-     * Cấu hình và cung cấp một bean PasswordEncoder.
-     * Spring Security sẽ sử dụng bean này để mã hóa và kiểm tra mật khẩu.
-     * BCryptPasswordEncoder là một lựa chọn phổ biến và an toàn.
-     *
-     * @return Một instance của PasswordEncoder (BCryptPasswordEncoder).
-     */
+
     @Bean// Đánh dấu phương thức này sẽ tạo ra một Spring Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(); // Sử dụng BCryptPasswordEncoder
@@ -90,6 +81,7 @@ import java.util.List;
                             .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                             .requestMatchers(HttpMethod.POST,
                                     "/api/auth/login",
+                                    "/api/auth/register",
                                     "/api/auth/forgot-password",
                                     "/api/onboarding/**",
                                     "/api/auth/reset-password",
@@ -99,8 +91,11 @@ import java.util.List;
                             .requestMatchers("/api/manual/drivers/**").hasRole("OWNER_LENDER")
                             .requestMatchers("/api/auth/change-password-request").hasAuthority("ROLE_OWNER_LENDER")
                             .requestMatchers("/api/drivers/admin/**").hasAuthority("ROLE_OWNER_LENDER")
-                            .requestMatchers("/api/users/profile/**").hasAuthority("ROLE_OWNER_LENDER")
+                            .requestMatchers("/api/users/profile/**").hasRole("OWNER_LENDER")
                             .requestMatchers("/api/trips/**").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/users/profile/**").hasAuthority("ROLE_OWNER_LENDER")
+                            .requestMatchers(HttpMethod.GET, "/api/drivers/admin/**").hasAuthority("ROLE_OWNER_LENDER")
+                            .requestMatchers(HttpMethod.GET, "/api/vehicles").hasAuthority("ROLE_OWNER_LENDER")
                             .requestMatchers("/api/vehicles/**").hasAuthority("ROLE_OWNER_LENDER")
                         .anyRequest().authenticated()
                 )
@@ -130,13 +125,10 @@ import java.util.List;
         corsConfiguration.setAllowedMethods(Arrays.asList(
                 "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"
         ));
-
-
         // Chỉ định các header được phép gửi từ client
         corsConfiguration.setAllowedHeaders(Arrays.asList(
                 "Authorization", "Content-Type", "X-Requested-With"
         ));
-
         // Chỉ định các header client được phép đọc từ response
         corsConfiguration.setExposedHeaders(List.of("Authorization"));
 
@@ -147,6 +139,5 @@ import java.util.List;
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
     }
-
 }
 

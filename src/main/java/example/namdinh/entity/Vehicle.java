@@ -1,5 +1,6 @@
 package example.namdinh.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,8 +24,8 @@ public class Vehicle {
     @Column(name = "camera_id", length = 50, nullable = false, unique = true)
     private String cameraId;
 
-
     @OneToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     @JoinColumn(name = "user_id", unique = true) // Cột FK trong bảng vehicles
     private User owner;
 }
