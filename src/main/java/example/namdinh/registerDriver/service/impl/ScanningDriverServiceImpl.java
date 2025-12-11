@@ -6,6 +6,7 @@ import example.namdinh.registerDriver.dto.request.DriverCompletionRequest;
 import example.namdinh.registerDriver.dto.request.DriverInitRequest;
 import example.namdinh.registerDriver.dto.response.DriverResponse;
 import example.namdinh.entity.Driver;
+import example.namdinh.registerDriver.dto.response.FaceMapResponse;
 import example.namdinh.registerDriver.repository.DriverRepository;
 import example.namdinh.registerDriver.service.ScanningDriverService;
 import lombok.RequiredArgsConstructor;
@@ -72,8 +73,9 @@ public class ScanningDriverServiceImpl implements ScanningDriverService {
                 .build();
     }
     @Override
-    public List<String> getAllDriverFaces() {
-        return driverRepository.findAllFaces();
+    public List<FaceMapResponse> getActivatedFaceMaps() {
+        return driverRepository.findAllActivatedFaceMaps();
     }
+
 
 }

@@ -5,6 +5,7 @@ package example.namdinh.registerDriver.controller.scanning;
 import example.namdinh.registerDriver.dto.request.DriverCompletionRequest;
 import example.namdinh.registerDriver.dto.request.DriverInitRequest;
 import example.namdinh.registerDriver.dto.response.DriverResponse;
+import example.namdinh.registerDriver.dto.response.FaceMapResponse;
 import example.namdinh.registerDriver.service.ScanningDriverService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,10 +33,9 @@ public class ScanningDriverController {
         DriverResponse response = scanningService.completeRegistration(request);
         return ResponseEntity.ok(response);
     }
-
-    @GetMapping("/faces")
-    public ResponseEntity<List<String>> getAllDriverFaces() {
-        List<String> faceList = scanningService.getAllDriverFaces();
-        return ResponseEntity.ok(faceList);
+    @GetMapping("/faces/activated-map")
+    public ResponseEntity<List<FaceMapResponse>> getActivatedFaceMap() {
+        List<FaceMapResponse> faceMapList = scanningService.getActivatedFaceMaps();
+        return ResponseEntity.ok(faceMapList);
     }
 }
