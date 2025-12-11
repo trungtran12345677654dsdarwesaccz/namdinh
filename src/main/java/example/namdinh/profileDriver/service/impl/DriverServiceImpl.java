@@ -3,6 +3,7 @@ package example.namdinh.profileDriver.service.impl;
 import example.namdinh.entity.Driver;
 
 import example.namdinh.profileDriver.dto.DriverUpdateRequest;
+import example.namdinh.profileDriver.dto.FaceDataForPi;
 import example.namdinh.profileDriver.service.DriverService;
 import example.namdinh.registerDriver.repository.DriverRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +25,19 @@ public class DriverServiceImpl implements DriverService {
         return driverRepository.findById(driverId)
                 .orElseThrow(() -> new RuntimeException("Driver not found with ID: " + driverId));
     }
-
+    @Override
+    public List<FaceDataForPi> getActivatedDriverFaceData() {
+        // 1. Truy vấn DB: Lấy Drivers có isAccountCreated = true VÀ Face data không null
+        List<Driver> activatedDrivers = driverRepository.findByIsAccountCreatedTrueAndFaceIsNotNull();
+        // 2. Ánh xạ sang DTO (FaceDataForPi)
+        return activatedDrivers.stream()
+                .map(driver -> FaceDataForPi.builder()
+                        .driverId(driver.getDriverId())
+                        .driverName(driver.getDriverName())
+                        .face(driver.getFace())
+                        .build())
+                .collect(Collectors.toList());
+    }
     @Override
     public Driver updateDriver(Long driverId, DriverUpdateRequest request) {
         Driver driver = getDriverById(driverId);

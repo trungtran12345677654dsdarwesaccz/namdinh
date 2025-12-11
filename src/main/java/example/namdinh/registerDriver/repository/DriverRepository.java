@@ -2,7 +2,6 @@
 package example.namdinh.registerDriver.repository;
 
 import example.namdinh.entity.Driver;
-import example.namdinh.profileDriver.dto.DriverUpdateRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -32,4 +31,5 @@ public interface DriverRepository extends JpaRepository<Driver, Long> {
             @Param("age") Integer age,
             @Param("phoneNumber") String phoneNumber);
     Optional<Driver> findByFaceAndIsAccountCreated(String face, boolean isAccountCreated);
+    List<Driver> findByIsAccountCreatedTrueAndFaceIsNotNull();
 }

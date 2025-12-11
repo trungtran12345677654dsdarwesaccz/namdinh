@@ -1,7 +1,6 @@
 package example.namdinh.repository;
 
 
-import com.google.api.services.gmail.Gmail;
 import example.namdinh.entity.User;
 import example.namdinh.entity.UserSession;
 import org.springframework.data.jpa.repository.JpaRepository;
