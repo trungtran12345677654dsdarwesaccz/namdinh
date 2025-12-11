@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -68,6 +70,10 @@ public class ScanningDriverServiceImpl implements ScanningDriverService {
                 .isAccountCreated(savedDriver.isAccountCreated())
                 .message("Driver profile registration completed successfully.")
                 .build();
+    }
+    @Override
+    public List<String> getAllDriverFaces() {
+        return driverRepository.findAllFaces();
     }
 
 }

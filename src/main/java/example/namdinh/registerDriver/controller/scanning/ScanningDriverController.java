@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/scanning/drivers")
 @RequiredArgsConstructor
@@ -29,5 +31,11 @@ public class ScanningDriverController {
     public ResponseEntity<DriverResponse> completeRegistration(@RequestBody DriverCompletionRequest request) {
         DriverResponse response = scanningService.completeRegistration(request);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/faces")
+    public ResponseEntity<List<String>> getAllDriverFaces() {
+        List<String> faceList = scanningService.getAllDriverFaces();
+        return ResponseEntity.ok(faceList);
     }
 }

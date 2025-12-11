@@ -32,4 +32,7 @@ public interface DriverRepository extends JpaRepository<Driver, Long> {
             @Param("phoneNumber") String phoneNumber);
     Optional<Driver> findByFaceAndIsAccountCreated(String face, boolean isAccountCreated);
     List<Driver> findByIsAccountCreatedTrueAndFaceIsNotNull();
+    boolean existsByFaceAndIsAccountCreated(String face, boolean isAccountCreated);
+    @Query("SELECT d.face FROM Driver d")
+    List<String> findAllFaces();
 }
